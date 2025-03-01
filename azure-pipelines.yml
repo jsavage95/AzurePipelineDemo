@@ -36,15 +36,14 @@ steps:
   displayName: 'Provision Azure Web App'
 
 - powershell: |
-    Write-Host "Listing files in current directory..."
-    dir
-  displayName: 'Debug: List Files'  # New debug step added here
+    Compress-Archive -Path index.html -DestinationPath $(Build.ArtifactStagingDirectory)/deploy.zip -Force
+  displayName: 'Zip index.html for deployment'
 
 - task: AzureWebApp@1
   inputs:
-    azureSubscription: 'AzureServiceConnection' # Replace with your service connection name
+    azureSubscription: 'AzureServiceConnection'
     appType: webApp
     appName: '$(webAppName)'
-    package: '$(System.DefaultWorkingDirectory)/index.html'
+    package: '$(Build.ArtifactStagingDirectory)/deploy.zip'
+    deploymentMethod: zipDeploy
   displayName: 'Deploy index.html to Web App'
-
