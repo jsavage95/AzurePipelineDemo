@@ -46,6 +46,5 @@ steps:
     appType: webApp
     appName: '$(webAppName)'
     package: '$(System.DefaultWorkingDirectory)/index.html'
-    deploymentMethod: auto
   displayName: 'Deploy index.html to Web App'
 
