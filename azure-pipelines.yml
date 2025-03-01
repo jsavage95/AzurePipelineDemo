@@ -1,0 +1,38 @@
+trigger:
+- main
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+variables:
+  resourceGroupName: 'HelloIOR-RG'
+  webAppName: 'hello-ior-webapp-$(Build.BuildId)' # Unique name per build
+
+steps:
+- script: |
+    echo "Validating index.html content..."
+    if grep -q "Hello iOR!" index.html; then
+      echo "Validation passed: 'Hello iOR!' found."
+    else
+      echo "Validation failed: 'Hello iOR!' not found."
+      exit 1
+    fi
+  displayName: 'Quality Check: Validate Content'
+
+- task: AzureCLI@2
+  inputs:
+    azureSubscription: 'AzureServiceConnection' # Replace with your service connection name
+    scriptType: 'pscore'
+    scriptLocation: 'inlineScript'
+    inlineScript: |
+      pwsh ./deploy-webapp.ps1 -resourceGroupName "$(resourceGroupName)" -webAppName "$(webAppName)"
+  displayName: 'Provision Azure Web App'
+
+- task: AzureWebApp@1
+  inputs:
+    azureSubscription: 'AzureServiceConnection' # Replace with your service connection name
+    appType: 'webAppLinux'
+    appName: '$(webAppName)'
+    package: '$(System.DefaultWorkingDirectory)/index.html'
+    deploymentMethod: 'zipDeploy'
+  displayName: 'Deploy index.html to Web App'
