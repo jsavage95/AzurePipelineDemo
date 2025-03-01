@@ -47,6 +47,6 @@ steps:
     appType: 'webAppLinux'
     appName: '$(webAppName)'
     package: '$(System.DefaultWorkingDirectory)/index.html'
-    deploymentMethod: 'zipDeploy'
+    deploymentMethod:  auto
   displayName: 'Deploy index.html to Web App'
 
