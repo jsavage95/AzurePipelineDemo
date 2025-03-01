@@ -10,14 +10,20 @@ variables:
   webAppName: 'hello-ior-webapp-$(Build.BuildId)' # Unique name per build
 
 steps:
-- script: |
-    echo "Validating index.html content..."
-    if findstr /I "Hello iOR!" index.html >nul; then
-      echo "Validation passed: 'Hello iOR!' found."
-    else
-      echo "Validation failed: 'Hello iOR!' not found."
+- powershell: |
+    Write-Host "Validating index.html content..."
+    if (Test-Path "index.html") {
+      $content = Get-Content "index.html" -Raw
+      if ($content -match "Hello iOR!") {
+        Write-Host "Validation passed: 'Hello iOR!' found."
+      } else {
+        Write-Host "Validation failed: 'Hello iOR!' not found."
+        exit 1
+      }
+    } else {
+      Write-Host "Error: index.html not found in the current directory."
       exit 1
-    fi
+    }
   displayName: 'Quality Check: Validate Content'
 
 - task: AzureCLI@2
