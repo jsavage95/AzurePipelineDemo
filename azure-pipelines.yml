@@ -29,10 +29,10 @@ steps:
 - task: AzureCLI@2
   inputs:
     azureSubscription: 'AzureServiceConnection' # Replace with your service connection name
-    scriptType: 'pscore'
+    scriptType: 'ps'
     scriptLocation: 'inlineScript'
     inlineScript: |
-      pwsh ./deploy-webapp.ps1 -resourceGroupName "$(resourceGroupName)" -webAppName "$(webAppName)"
+      powershell -File ./deploy-webapp.ps1 -resourceGroupName "$(resourceGroupName)" -webAppName "$(webAppName)"
   displayName: 'Provision Azure Web App'
 
 - task: AzureWebApp@1
@@ -43,3 +43,4 @@ steps:
     package: '$(System.DefaultWorkingDirectory)/index.html'
     deploymentMethod: 'zipDeploy'
   displayName: 'Deploy index.html to Web App'
+
