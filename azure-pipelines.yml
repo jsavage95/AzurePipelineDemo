@@ -7,7 +7,7 @@ pool:
 
 variables:
   resourceGroupName: 'HelloIOR-RG'
-  webAppName: 'hello-ior-webapp-$(Build.BuildId)' # Unique name per build
+  webAppName: 'hello-ior-webapp-2025' # Unique name per build
 
 steps:
 - powershell: |
