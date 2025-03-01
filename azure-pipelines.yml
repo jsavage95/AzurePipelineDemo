@@ -40,13 +40,12 @@ steps:
     dir
   displayName: 'Debug: List Files'  # New debug step added here
 
-
 - task: AzureWebApp@1
   inputs:
     azureSubscription: 'AzureServiceConnection' # Replace with your service connection name
     appType: 'webAppLinux'
     appName: '$(webAppName)'
-    package: '$(System.DefaultWorkingDirectory)/wwwroot/index.html'
+    package: '$(System.DefaultWorkingDirectory)/index.html'
     deploymentMethod:  runFromPackage
   displayName: 'Deploy index.html to Web App'
 
