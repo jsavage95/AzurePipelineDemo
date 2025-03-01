@@ -43,8 +43,9 @@ steps:
 - task: AzureWebApp@1
   inputs:
     azureSubscription: 'AzureServiceConnection' # Replace with your service connection name
-    appType: 'webAppLinux'
+    appType: webApp
     appName: '$(webAppName)'
     package: '$(System.DefaultWorkingDirectory)/index.html'
+    deploymentMethod: auto
   displayName: 'Deploy index.html to Web App'
 
