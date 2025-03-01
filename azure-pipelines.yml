@@ -2,8 +2,8 @@ trigger:
 - main
 
 pool:
-  vmImage: 'default'
-  demands: agent.name -equals MyDesktop
+  vmImage: 'local'
+  
 
 variables:
   resourceGroupName: 'HelloIOR-RG'
