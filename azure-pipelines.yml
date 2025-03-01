@@ -35,6 +35,12 @@ steps:
       powershell -File ./deploy-webapp.ps1 -resourceGroupName "$(resourceGroupName)" -webAppName "$(webAppName)"
   displayName: 'Provision Azure Web App'
 
+- powershell: |
+    Write-Host "Listing files in current directory..."
+    dir
+  displayName: 'Debug: List Files'  # New debug step added here
+
+
 - task: AzureWebApp@1
   inputs:
     azureSubscription: 'AzureServiceConnection' # Replace with your service connection name
