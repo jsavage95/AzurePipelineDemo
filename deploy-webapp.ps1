@@ -1,7 +1,7 @@
 param (
     [string]$resourceGroupName = "HelloIOR-RG",
     [string]$location = "australiaeast",
-    [string]$webAppName = "hello-ior-webapp-$(Get-Random -Maximum 10000)",
+    [string]$webAppName = "hello-ior-webapp-2025",
     [string]$appServicePlanName = "HelloIOR-Plan"
 )
 
