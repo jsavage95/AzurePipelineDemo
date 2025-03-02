@@ -45,5 +45,5 @@ steps:
     appType: webApp
     appName: '$(webAppName)'
     package: '$(Build.ArtifactStagingDirectory)/index.html'
-    deploymentMethod: zipDeploy
+    deploymentMethod: auto
   displayName: 'Deploy index.html to Web App'
