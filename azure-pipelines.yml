@@ -35,15 +35,15 @@ steps:
       powershell -File ./deploy-webapp.ps1 -resourceGroupName "$(resourceGroupName)" -webAppName "$(webAppName)"
   displayName: 'Provision Azure Web App'
 
-- powershell: |
-    Compress-Archive -Path index.html -DestinationPath $(Build.ArtifactStagingDirectory)/deploy.zip -Force
-  displayName: 'Zip index.html for deployment'
+# - powershell: |
+#     Compress-Archive -Path index.html -DestinationPath $(Build.ArtifactStagingDirectory)/deploy.zip -Force
+#   displayName: 'Zip index.html for deployment'
 
 - task: AzureWebApp@1
   inputs:
     azureSubscription: 'AzureServiceConnection'
     appType: webApp
     appName: '$(webAppName)'
-    package: '$(Build.ArtifactStagingDirectory)/deploy.zip'
+    package: '$(Build.ArtifactStagingDirectory)/index.html'
     deploymentMethod: zipDeploy
   displayName: 'Deploy index.html to Web App'
