@@ -1,5 +1,8 @@
 trigger:
-- main
+  branches:
+    include:
+    - dev
+    - main
 
 pool:
   name: 'local'
@@ -27,6 +30,7 @@ steps:
   displayName: 'Quality Check: Validate Content'
 
 - task: AzureCLI@2
+  condition: eq(variables['Build.SourceBranchName'], 'main') # Only run on main
   inputs:
     azureSubscription: 'AzureServiceConnection' # Replace with your service connection name
     scriptType: 'ps'
