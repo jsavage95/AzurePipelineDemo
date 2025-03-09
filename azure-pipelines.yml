@@ -41,9 +41,11 @@ steps:
 
 - powershell: |
     Compress-Archive -Path index.html -DestinationPath $(Build.ArtifactStagingDirectory)/deploy.zip -Force
+  condition: eq(variables['Build.SourceBranchName'], 'main') # Only run on main
   displayName: 'Zip index.html for deployment'
 
 - task: AzureWebApp@1
+  condition: eq(variables['Build.SourceBranchName'], 'main') # Only run on main
   inputs:
     azureSubscription: 'AzureServiceConnection'
     appType: webApp
