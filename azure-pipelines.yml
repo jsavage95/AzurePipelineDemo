@@ -30,7 +30,7 @@ steps:
   displayName: 'Quality Check: Validate Content'
 
 - task: AzureCLI@2
-  condition: eq(variables['Build.SourceBranchName'], 'main') # Only run on main
+  condition: ${{ variables.runOnMain }}
   inputs:
     azureSubscription: 'AzureServiceConnection' # Replace with your service connection name
     scriptType: 'ps'
@@ -41,11 +41,11 @@ steps:
 
 - powershell: |
     Compress-Archive -Path index.html -DestinationPath $(Build.ArtifactStagingDirectory)/deploy.zip -Force
-  condition: eq(variables['Build.SourceBranchName'], 'main') # Only run on main
+  condition: ${{ variables.runOnMain }}
   displayName: 'Zip index.html for deployment'
 
 - task: AzureWebApp@1
-  condition: eq(variables['Build.SourceBranchName'], 'main') # Only run on main
+  condition: ${{ variables.runOnMain }}
   inputs:
     azureSubscription: 'AzureServiceConnection'
     appType: webApp
