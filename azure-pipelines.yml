@@ -12,44 +12,50 @@ variables:
   resourceGroupName: 'HelloIOR-RG'
   webAppName: 'hello-ior-webapp-2025' # Unique name per build
 
-steps:
-- powershell: |
-    Write-Host "Validating index.html content..."
-    if (Test-Path "index.html") {
-      $content = Get-Content "index.html" -Raw
-      if ($content -match "Hello iOR!") {
-        Write-Host "Validation passed: 'Hello iOR!' found."
-      } else {
-        Write-Host "Validation failed: 'Hello iOR!' not found."
-        exit 1
-      }
-    } else {
-      Write-Host "Error: index.html not found in the current directory."
-      exit 1
-    }
-  displayName: 'Quality Check: Validate Content'
+stages:
+- stage: Validate
+  jobs:
+  - job: ValidateContent
+    steps:
+    - powershell: |
+        Write-Host "Validating index.html content..."
+        if (Test-Path "index.html") {
+          $content = Get-Content "index.html" -Raw
+          if ($content -match "Hello iOR!") {
+            Write-Host "Validation passed: 'Hello iOR!' found."
+          } else {
+            Write-Host "Validation failed: 'Hello iOR!' not found."
+            exit 1
+          }
+        } else {
+          Write-Host "Error: index.html not found in the current directory."
+          exit 1
+        }
+      displayName: 'Quality Check: Validate Content'
 
-- task: AzureCLI@2
-  condition: ${{ variables.runOnMain }}
-  inputs:
-    azureSubscription: 'AzureServiceConnection' # Replace with your service connection name
-    scriptType: 'ps'
-    scriptLocation: 'inlineScript'
-    inlineScript: |
-      powershell -File ./deploy-webapp.ps1 -resourceGroupName "$(resourceGroupName)" -webAppName "$(webAppName)"
-  displayName: 'Provision Azure Web App'
+- stage: Deploy
+  condition: eq(variables['Build.SourceBranchName'], 'main')
+  jobs:
+  - job: DeployToAzure
+    steps:
+    - task: AzureCLI@2
+      inputs:
+        azureSubscription: 'AzureServiceConnection' # Replace with your service connection name
+        scriptType: 'ps'
+        scriptLocation: 'inlineScript'
+        inlineScript: |
+          powershell -File ./deploy-webapp.ps1 -resourceGroupName "$(resourceGroupName)" -webAppName "$(webAppName)"
+      displayName: 'Provision Azure Web App'
 
-- powershell: |
-    Compress-Archive -Path index.html -DestinationPath $(Build.ArtifactStagingDirectory)/deploy.zip -Force
-  condition: ${{ variables.runOnMain }}
-  displayName: 'Zip index.html for deployment'
+    - powershell: |
+        Compress-Archive -Path index.html -DestinationPath $(Build.ArtifactStagingDirectory)/deploy.zip -Force
+      displayName: 'Zip index.html for deployment'
 
-- task: AzureWebApp@1
-  condition: ${{ variables.runOnMain }}
-  inputs:
-    azureSubscription: 'AzureServiceConnection'
-    appType: webApp
-    appName: '$(webAppName)'
-    package: '$(Build.ArtifactStagingDirectory)/deploy.zip'
-    deploymentMethod: zipDeploy
-  displayName: 'Deploy index.html to Web App'
+    - task: AzureWebApp@1
+      inputs:
+        azureSubscription: 'AzureServiceConnection'
+        appType: webApp
+        appName: '$(webAppName)'
+        package: '$(Build.ArtifactStagingDirectory)/deploy.zip'
+        deploymentMethod: zipDeploy
+      displayName: 'Deploy index.html to Web App'
