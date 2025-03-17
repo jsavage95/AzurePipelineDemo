@@ -9,7 +9,7 @@ pool:
   
 variables:
   resourceGroupName: 'HelloIOR-RG'
-  webAppName: 'hello-ior-webapp-2025' # Unique name per build
+  webAppName: 'hello-ior-webapp-2025'
 
 stages:
 - stage: Validate
