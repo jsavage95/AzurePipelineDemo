@@ -7,10 +7,9 @@ trigger:
 pool:
   name: 'local'
   
-
 variables:
   resourceGroupName: 'HelloIOR-RG'
-  webAppName: 'hello-ior-webapp-2025' # Unique name per build
+  webAppName: 'hello-ior-webapp-2025'
 
 stages:
 - stage: Validate
@@ -40,7 +39,7 @@ stages:
     steps:
     - task: AzureCLI@2
       inputs:
-        azureSubscription: 'AzureServiceConnection' # Replace with your service connection name
+        azureSubscription: 'AzureServiceConnection' 
         scriptType: 'ps'
         scriptLocation: 'inlineScript'
         inlineScript: |
